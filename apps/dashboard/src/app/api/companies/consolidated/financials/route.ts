@@ -172,8 +172,8 @@ export async function GET(request: NextRequest) {
         // Reset and recalculate up to the end of the filtered month
         cashBalance = 0;
         allCashTransactions
-          .filter(tx => new Date(tx.date) <= monthEnd)
-          .forEach((tx) => {
+          .filter((tx: any) => new Date(tx.date) <= monthEnd)
+          .forEach((tx: any) => {
             const amount = Number(tx.amount);
             const category = (tx.category || '').toLowerCase().trim();
             

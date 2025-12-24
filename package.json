@@ -18,7 +18,8 @@
     "desktop:dev": "cd apps/desktop && npm run dev",
     "desktop:start": "cd apps/desktop && npm start",
     "desktop:build": "cd apps/desktop && npm run build",
-    "desktop:build:win": "cd apps/desktop && npm run build:win"
+    "desktop:build:win": "cd apps/desktop && npm run build:win",
+    "postinstall": "cd packages/database && npx prisma generate"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

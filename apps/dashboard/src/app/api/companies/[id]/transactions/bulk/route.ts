@@ -272,7 +272,7 @@ export async function POST(
       const batch = transactions.slice(i, i + batchSize);
       
       // Process each batch in its own transaction with extended timeout
-      const batchResults = await prisma.$transaction(async (tx) => {
+      const batchResults = await prisma.$transaction(async (tx: any) => {
         const results = [];
         
         for (const transactionData of batch) {

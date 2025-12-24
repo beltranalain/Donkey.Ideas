@@ -46,7 +46,7 @@ export async function GET(
       orderBy: { period: 'desc' },
     });
     
-    const sheets = balanceSheets.map((sheet) => ({
+    const sheets = balanceSheets.map((sheet: any) => ({
       ...sheet,
       cashEquivalents: sheet.cashEquivalents.toNumber(),
       accountsReceivable: sheet.accountsReceivable.toNumber(),

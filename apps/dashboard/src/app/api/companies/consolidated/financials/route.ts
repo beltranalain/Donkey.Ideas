@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     let totalCashBalance = 0;
     
     // Calculate from transactions (single source of truth) instead of stale P&L statements
-    const companyBreakdown = await Promise.all(companies.map(async (company) => {
+    const companyBreakdown = await Promise.all(companies.map(async (company: any) => {
       // Build transaction date filter if month is provided
       let transactionDateFilter: any = {};
       if (monthFilter) {
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
       });
       
       // Calculate running cash balance from transactions
-      allCashTransactions.forEach((tx) => {
+      allCashTransactions.forEach((tx: any) => {
         const amount = Number(tx.amount);
         const category = (tx.category || '').toLowerCase().trim();
         

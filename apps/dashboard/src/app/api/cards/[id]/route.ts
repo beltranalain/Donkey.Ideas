@@ -69,7 +69,7 @@ export async function PUT(
         description: validated.description,
         columnId: validated.columnId,
         position: validated.position,
-        tags: validated.tags,
+        tags: validated.tags ? JSON.stringify(validated.tags) : undefined,
       },
     });
     

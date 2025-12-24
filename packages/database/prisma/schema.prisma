@@ -5,9 +5,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Use SQLite for local development
+// Use PostgreSQL for production (Vercel)
+// For local development, use SQLite by setting DATABASE_URL to file:./dev.db
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -63,7 +64,7 @@ model ApiUsage {
   responseSize   Int?     // Response size in bytes
   statusCode    Int?     // HTTP status code
   error         String?  // Error message if any
-  metadata      String?    // Additional metadata
+  metadata      Json?    // Additional metadata
   createdAt     DateTime @default(now())
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -276,7 +277,7 @@ model Card {
   title       String
   description String?
   position    Int
-  tags        String   // Comma-separated tag strings (stored as JSON string)
+  tags        Json   // Array of tag strings
   createdAt   DateTime @default(now())
   
   column Column @relation(fields: [columnId], references: [id], onDelete: Cascade)
@@ -323,7 +324,7 @@ model TeamMember {
   userId      String?  // Null if invite not accepted
   email       String
   role        String   // owner, admin, member, viewer
-  permissions String     // Flexible permission object (stored as JSON string)
+  permissions Json     // Flexible permission object
   status      String   @default("pending") // pending, active, inactive
   invitedBy   String
   createdAt   DateTime @default(now())
@@ -358,7 +359,7 @@ model InvestorUpdate {
   investorId      String
   title           String
   content         String
-  metricsIncluded String     // Array of metric keys (stored as JSON string)
+  metricsIncluded Json     // Array of metric keys
   sentAt          DateTime @default(now())
   openedAt        DateTime?
   
@@ -374,7 +375,7 @@ model Valuation {
   method     String   // revenue_multiple, dcf, market_comps
   amount     Decimal
   score      Int      // AI score 0-100
-  parameters String     // Method-specific params (stored as JSON string)
+  parameters Json     // Method-specific params
   createdAt  DateTime @default(now())
   
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
@@ -388,7 +389,7 @@ model Deck {
   companyId  String
   title      String
   deckType   String   // investor, sales, partnership
-  content    String     // Array of slide objects
+  content    Json     // Array of slide objects
   createdAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -412,7 +413,7 @@ model Whitepaper {
   companyOverview     String?
   mission             String?
   vision              String?
-  coreValues          String?    // Array of value objects {title, description}
+  coreValues          Json?    // Array of value objects {title, description}
   legalName           String?
   founded             String?
   headquarters        String?
@@ -425,13 +426,13 @@ model Whitepaper {
   productDescription  String?
   
   // Technology
-  technologyStack     String?    // Array of tech categories
+  technologyStack     Json?    // Array of tech categories
   architecture        String?
   technicalDetails    String?
   
   // Business Model
   businessModel       String?
-  revenueStreams      String?    // Array of revenue stream objects
+  revenueStreams      Json?    // Array of revenue stream objects
   pricingStrategy     String?
   goToMarket          String?
   
@@ -439,36 +440,36 @@ model Whitepaper {
   targetMarket        String?
   marketSize          String?
   marketTrends       String?
-  customerSegments    String?    // Array of segment objects
+  customerSegments    Json?    // Array of segment objects
   
   // Competitive Landscape
   competitiveAnalysis  String?
-  competitors         String?    // Array of competitor objects
+  competitors         Json?    // Array of competitor objects
   competitiveAdvantage String?
   
   // Team & Advisors
   teamDescription     String?
-  keyTeamMembers      String?    // Array of team member objects
-  advisors            String?    // Array of advisor objects
-  partners            String?    // Array of partner objects
+  keyTeamMembers      Json?    // Array of team member objects
+  advisors            Json?    // Array of advisor objects
+  partners            Json?    // Array of partner objects
   
   // Roadmap & Milestones
-  roadmap             String?    // Array of milestone objects
-  milestones          String?    // Array of milestone objects with dates
+  roadmap             Json?    // Array of milestone objects
+  milestones          Json?    // Array of milestone objects with dates
   
   // Financials
   financialProjections String?
-  fundingHistory      String?    // Array of funding rounds
+  fundingHistory      Json?    // Array of funding rounds
   useOfFunds          String?
-  financialHighlights String?    // Key financial metrics
+  financialHighlights Json?    // Key financial metrics
   
   // Tokenomics / Economics (if applicable)
   tokenomics          String?
-  tokenDistribution  String?    // Token allocation breakdown
+  tokenDistribution  Json?    // Token allocation breakdown
   economics           String?  
   // Use Cases
-  useCases            String?    // Array of use case objects
-  caseStudies         String?    // Array of case study objects
+  useCases            Json?    // Array of use case objects
+  caseStudies         Json?    // Array of case study objects
   
   // Legal & Regulatory
   legalConsiderations String?
@@ -500,7 +501,7 @@ model Activity {
   action     String   // create, update, delete, etc.
   entityType String   // company, financial, document, etc.
   entityId   String?
-  changes    String?    // Before/after values
+  changes    Json?    // Before/after values
   ipAddress  String?
   createdAt  DateTime @default(now())
   
@@ -515,7 +516,7 @@ model Activity {
 model WebsiteContent {
   id        String   @id @default(cuid())
   section   String   @unique // hero, about, services, etc.
-  content   String     // Flexible content structure
+  content   Json     // Flexible content structure
   published Boolean  @default(true)
   updatedAt DateTime @updatedAt
   
